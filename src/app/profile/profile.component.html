@@ -1,0 +1,32 @@
+<div class="max-w-2xl mx-auto p-6 my-10 bg-white shadow-2xl rounded-xl">
+  <h1 class="text-3xl font-extrabold text-indigo-700 mb-4">
+    My Event Profile & Check-in QR
+  </h1>
+  
+  <div class="flex items-start space-x-8">
+    
+    <div class="flex-1">
+      <p class="text-xl font-semibold mb-2">{{ attendee.fullName }}</p>
+      <p class="text-gray-600 mb-1">ID: <span class="font-mono text-indigo-600">{{ attendee.id }}</span></p>
+      <p class="text-gray-600 mb-1">Email: {{ attendee.emailAddress }}</p>
+      <p class="text-gray-600 mb-4">Category: {{ attendee.attendeeCategory }} ({{ attendee.designation || attendee.ugPg }})</p>
+      
+      <p class="text-lg font-bold" [ngClass]="{'text-green-600': attendee.checkedIn, 'text-red-600': !attendee.checkedIn}">
+        Check-in Status: {{ attendee.checkedIn ? 'CHECKED IN ✔️' : 'PENDING 🔴' }}
+      </p>
+
+      <button (click)="mockCheckIn()"
+              [disabled]="attendee.checkedIn"
+              class="mt-4 py-2 px-4 rounded font-semibold text-white transition duration-150"
+              [ngClass]="{'bg-gray-400': attendee.checkedIn, 'bg-green-600 hover:bg-green-700': !attendee.checkedIn}">
+        Staff Mock Check-in
+      </button>
+    </div>
+    
+    <div class="w-48 h-48 bg-gray-100 p-2 border border-gray-300 rounded shadow-inner flex justify-center items-center flex-col">
+      <div class="text-4xl text-gray-800">🖼️</div>
+      <p class="text-xs text-center mt-2">Unique QR Code (Mock)</p>
+      <p class="text-[10px] text-indigo-500 font-mono mt-1">{{ attendee.id }}</p>
+    </div>
+  </div>
+</div>

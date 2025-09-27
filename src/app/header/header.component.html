@@ -1,0 +1,23 @@
+<header class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex-shrink-0">
+        <span class="text-2xl font-extrabold text-indigo-600">IPX Hub ✨</span>
+      </div>
+      <nav class="ml-10 hidden md:block">
+        <div class="flex items-baseline space-x-4">
+          <button *ngFor="let item of navItems" 
+                  (click)="navigateTo(item.route)"
+                  class="px-3 py-2 rounded-md text-sm font-medium transition duration-150"
+                  [ngClass]="{
+                    'text-white bg-indigo-600': router.url === item.route,
+                    'text-gray-900 hover:bg-gray-100': router.url !== item.route
+                  }">
+            {{ item.name }}
+          </button>
+        </div>
+      </nav>
+      <div class="md:hidden text-gray-500">Menu</div>
+    </div>
+  </div>
+</header>
