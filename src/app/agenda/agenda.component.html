@@ -1,38 +1,76 @@
 <div class="max-w-6xl mx-auto p-6 my-10">
-  <h1 class="text-4xl font-extrabold text-indigo-700 mb-6">Event Agenda & Personalized Experience</h1>
+  <h1 class="text-4xl font-extrabold text-indigo-700 mb-6">
+    MyTrax Agenda Planner
+  </h1>
 
   <div class="flex border-b border-gray-200 mb-8">
-    <button (click)="activeTab = 'ai-recommended'; generateAiAgenda();" [ngClass]="{'border-indigo-500 text-indigo-600': activeTab === 'ai-recommended', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'ai-recommended'}" class="tab-button">✨ AI Recommended</button>
-    <button (click)="activeTab = 'all'" [ngClass]="{'border-indigo-500 text-indigo-600': activeTab === 'all', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'all'}" class="tab-button">All Sessions</button>
-    <button (click)="activeTab = 'personal'" [ngClass]="{'border-indigo-500 text-indigo-600': activeTab === 'personal', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'personal'}" class="tab-button">My Agenda ({{ currentAttendee.personalAgenda.length }})</button>
+    <button (click)="activeTab = 'ai-recommended'; generateAiAgenda();" [ngClass]="{'border-indigo-500 text-indigo-700 font-bold': activeTab === 'ai-recommended', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'ai-recommended'}" class="tab-button">✨ AI Recommended Agenda</button>
+    <button (click)="activeTab = 'all'" [ngClass]="{'border-indigo-500 text-indigo-700 font-bold': activeTab === 'all', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'all'}" class="tab-button">Full Schedule</button>
+    <button (click)="activeTab = 'personal'; updatePersonalSessions()" [ngClass]="{'border-indigo-500 text-indigo-700 font-bold': activeTab === 'personal', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'personal'}" class="tab-button">My Path ({{ personalSessions.length }})</button>
   </div>
 
   <ng-container *ngIf="activeTab === 'ai-recommended'">
-    <div class="p-4 mb-4 bg-indigo-50 border-l-4 border-indigo-500 text-indigo-800 rounded">
-      <p class="font-bold">AI Result:</p>
-      <p class="text-sm">Personalized based on your profile ({{ currentAttendee.designation || currentAttendee.ugPg }}) and guaranteed **time-conflict free**.</p>
+    <div class="p-4 mb-6 bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 rounded-lg shadow-sm">
+      <p class="font-bold text-lg">AI Confirmation:</p>
+      <p class="text-sm">Personalized based on your profile and guaranteed **time-conflict free**.</p>
     </div>
     
+    <div *ngIf="recommendedSessions.length === 0" class="p-4 bg-yellow-100 rounded-lg">No AI recommendations found for your profile yet.</div>
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let session of recommendedSessions" class="session-card border-green-500">
-        <p class="text-sm text-gray-500 mb-1">{{ session.timeslot }} | Track {{ session.track }}</p>
+      <div *ngFor="let session of recommendedSessions" class="app-card border-l-4 border-green-500 transform hover:scale-[1.02] transition duration-200">
+        <p class="text-sm text-gray-500 mb-1">
+          <span class="font-bold text-green-700">{{ session.timeslot }}</span> | Track {{ session.track }}
+        </p>
         <h3 class="text-xl font-bold text-green-800 mb-2">{{ session.title }}</h3>
         <p class="text-indigo-600 font-medium">Speaker: {{ session.speaker }}</p>
-        <button (click)="toggleSession(session.id)" [ngClass]="{'bg-green-600 text-white': !isInPersonalAgenda(session.id), 'bg-gray-400 text-white': isInPersonalAgenda(session.id)}" class="mt-3 py-1 px-3 text-sm rounded">
-          {{ isInPersonalAgenda(session.id) ? 'Already Added' : 'Add to My Agenda' }}
+        <button (click)="toggleSession(session.id)" 
+                [ngClass]="{'bg-green-600 text-white': !isInPersonalAgenda(session.id), 'bg-gray-400 text-white': isInPersonalAgenda(session.id)}" 
+                class="mt-3 py-1 px-3 text-sm rounded-full transition duration-150">
+          {{ isInPersonalAgenda(session.id) ? 'Added ✔️' : '+ Add to My Path' }}
         </button>
       </div>
     </div>
   </ng-container>
   
-  <ng-container *ngIf="activeTab !== 'ai-recommended'">
-    <h2 class="text-2xl font-semibold mb-4 text-gray-800">{{ activeTab === 'all' ? 'Full Schedule' : 'Your Selections' }}</h2>
-    </ng-container>
-</div>
+  <ng-container *ngIf="activeTab === 'all'">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Full Schedule</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let session of allSessions" class="app-card border-l-4 border-gray-400">
+        <p class="text-sm text-gray-500 mb-1">
+          <span class="font-bold text-gray-700">{{ session.timeslot }}</span> | Track {{ session.track }}
+        </p>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ session.title }}</h3>
+        <p class="text-indigo-600 font-medium">Speaker: {{ session.speaker }}</p>
+        <button (click)="toggleSession(session.id)" 
+                [ngClass]="{'bg-green-600 text-white': isInPersonalAgenda(session.id), 'bg-gray-400 text-white': !isInPersonalAgenda(session.id)}" 
+                class="mt-3 py-1 px-3 text-sm rounded-full transition duration-150">
+          {{ isInPersonalAgenda(session.id) ? 'Added ✔️' : '+ Add to My Path' }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
 
-<style>
-.tab-button { @apply py-3 px-6 text-lg font-medium border-b-2 transition duration-150; }
-.session-card { @apply bg-white p-5 rounded-lg shadow-xl border-l-4 transform hover:scale-[1.01] transition duration-200; }
-.label-text { @apply block text-sm font-medium text-gray-700; }
-.input-field { @apply mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500; }
-</style>
+  <ng-container *ngIf="activeTab === 'personal'">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Your Selected Sessions</h2>
+    
+    <div *ngIf="personalSessions.length === 0" class="p-6 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded">
+        <p>Your agenda is empty. Add sessions from the "AI Recommended" or "Full Schedule" tabs!</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let session of personalSessions" class="app-card border-l-4 border-indigo-500">
+            <p class="text-sm text-gray-500 mb-1">
+                <span class="font-bold text-indigo-700">{{ session.timeslot }}</span> | Track {{ session.track }}
+            </p>
+            <h3 class="text-xl font-bold text-indigo-800 mb-2">{{ session.title }}</h3>
+            <p class="text-indigo-600 font-medium">Speaker: {{ session.speaker }}</p>
+            
+            <button (click)="toggleSession(session.id)" 
+                    class="mt-3 py-1 px-3 text-sm rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition duration-150">
+                Remove from Path 🗑️
+            </button>
+        </div>
+    </div>
+  </ng-container>
+</div>

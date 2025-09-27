@@ -12,6 +12,10 @@ import { NetworkingComponent } from './networking/networking.component';
 import { ProfileComponent } from './profile/profile.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { LandingComponent } from './landing/landing.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProfessionalRegistrationComponent } from './professional-registration/professional-registration.component';
+import { StudentRegistrationComponent } from './student-registration/student-registration.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     AgendaComponent,
     ChatbotComponent,
     NetworkingComponent,
-    ProfileComponent
+    ProfileComponent,
+    LandingComponent,
+    DashboardComponent,
+    ProfessionalRegistrationComponent,
+    StudentRegistrationComponent
   ],
   imports: [
     BrowserModule,

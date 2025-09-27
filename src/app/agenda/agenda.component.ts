@@ -13,7 +13,7 @@ export class AgendaComponent implements OnInit {
   allSessions: Session[] = [];
   recommendedSessions: Session[] = [];
   currentAttendee!: Attendee;
-  // Default to AI-Recommended to showcase the feature immediately
+  personalSessions: Session[] = []; // Array for My Path view
   activeTab: 'all' | 'personal' | 'ai-recommended' = 'ai-recommended'; 
 
   constructor(
@@ -24,22 +24,37 @@ export class AgendaComponent implements OnInit {
   ngOnInit(): void {
     this.currentAttendee = this.dataService.getAttendee();
     this.allSessions = this.dataService.getSessions();
-    // Immediately call AI logic on load for the default tab
+    
+    // Initial data calls
+    this.generateAiAgenda(); 
+    this.updatePersonalSessions(); // Populate the My Path sessions
+  }
+
+  generateAiAgenda(): void {
+    // Generate AI recommendations immediately
+    this.recommendedSessions = this.aiService.generateRecommendedAgenda(this.currentAttendee);
+  }
+
+  // CRITICAL: Toggles session, updates attendee reference, AND updates the filtered list.
+  toggleSession(sessionId: string): void {
+    this.dataService.togglePersonalAgenda(sessionId);
+    
+    // Re-get attendee object
+    this.currentAttendee = this.dataService.getAttendee(); 
+    
+    // Update the filtered lists to force re-render
+    this.updatePersonalSessions(); 
     this.generateAiAgenda(); 
   }
 
-  // Function to run the AI logic
-  generateAiAgenda(): void {
-    this.recommendedSessions = this.aiService.generateRecommendedAgenda(this.currentAttendee);
-    this.activeTab = 'ai-recommended';
+  // Function to filter the full session list down to only selected ones (for My Path tab)
+  updatePersonalSessions(): void {
+    this.personalSessions = this.allSessions.filter(session => 
+      this.currentAttendee.personalAgenda.includes(session.id)
+    );
   }
 
-  // Function to toggle session in personal agenda
-  toggleSession(sessionId: string): void {
-    this.dataService.togglePersonalAgenda(sessionId);
-  }
-
-  // Check if a session is in the attendee's personal agenda
+  // Helper for checking if a session is selected
   isInPersonalAgenda(sessionId: string): boolean {
     return this.currentAttendee.personalAgenda.includes(sessionId);
   }

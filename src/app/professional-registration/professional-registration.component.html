@@ -1,0 +1,43 @@
+<div class="max-w-3xl mx-auto p-6 app-card my-10">
+  <h1 class="text-3xl font-bold text-indigo-700 mb-6 border-b pb-2">
+    Professional Registration
+  </h1>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div class="md:col-span-1"><label class="label-text">Full Name *</label><input formControlName="fullName" type="text" [class.border-red-500]="isInvalid('fullName')" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Email *</label><input formControlName="emailAddress" type="email" [class.border-red-500]="isInvalid('emailAddress')" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Mobile Number *</label><input formControlName="mobileNumber" type="tel" [class.border-red-500]="isInvalid('mobileNumber')" class="input-field"></div>
+    
+    <div class="md:col-span-1"><label class="label-text">Company *</label><input formControlName="company" type="text" [class.border-red-500]="isInvalid('company')" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Designation * (AI Key)</label><input formControlName="designation" type="text" placeholder="e.g. Cloud Developer" [class.border-red-500]="isInvalid('designation')" class="input-field"></div>
+    
+    <div class="md:col-span-1">
+      <label class="label-text">Food Choice *</label>
+      <select formControlName="foodChoice" [class.border-red-500]="isInvalid('foodChoice')" class="input-field">
+        <option value="">Select...</option><option value="Veg">Vegetarian</option><option value="Non-Veg">Non-Vegetarian</option>
+      </select>
+    </div>
+
+    <div class="md:col-span-2"><h2 class="text-lg font-semibold mt-4 mb-2">Optional & Emergency Contacts</h2></div>
+    
+    <div class="md:col-span-1"><label class="label-text">Country</label><input formControlName="country" type="text" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Gender</label><input formControlName="gender" type="text" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Blood Group</label><input formControlName="bloodGroup" type="text" class="input-field"></div>
+    
+    <div class="md:col-span-1"><label class="label-text">Emergency Contact Name</label><input formControlName="emergencyContactName" type="text" class="input-field"></div>
+    <div class="md:col-span-1"><label class="label-text">Emergency Contact Number</label><input formControlName="emergencyContactNumber" type="tel" class="input-field"></div>
+
+    <div class="md:col-span-2 mt-4">
+      <div class="flex items-start">
+        <input formControlName="optInConsent" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded mt-1">
+        <label class="ml-2 block text-sm text-gray-900">I would like to receive updates & notifications from this event organizer</label>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 mt-6">
+      <button type="submit" class="btn-primary w-full">
+        Complete Registration
+      </button>
+    </div>
+  </form>
+</div>
